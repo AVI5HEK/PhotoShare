@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Photo Share</string>
+    <string name="facebook_app_id">744765578959204</string>
+    <string name="button_login_fb">Login with FB</string>
+    <string name="text_caption">Caption</string>
+    <string name="button_share">Share</string>
+    <string name="button_dialog_camera">Camera</string>
+    <string name="button_dialog_gallery">Gallery</string>
+    <string name="share_another">Share another</string>
+    <string name="dialog_share_from">Share from...</string>
+    <string name="action_logout">Logout</string>
+</resources>
