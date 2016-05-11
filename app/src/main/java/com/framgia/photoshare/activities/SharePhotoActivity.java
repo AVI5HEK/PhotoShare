@@ -2,6 +2,7 @@ package com.framgia.photoshare.activities;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -46,6 +49,11 @@ public class SharePhotoActivity extends AppCompatActivity implements View.OnClic
     private static final String EXTRA_DATA = "data";
     private static final String IMAGE_EXTENSION = ".jpg";
     private static final int IMAGE_QUALITY = 90;
+    private static final String EXTRA_PACKAGE_FACEBOOK = "com.facebook.katana";
+    private static final String EXTRA_PACKAGE_TWITTER = "com.twitter.android";
+    private static final String EXTRA_PACKAGE_PINTEREST = "com.pinterest";
+    private static final String EXTRA_PACKAGE_INSTAGRAM = "com.instagram.android";
+    private static final String EXTRA_PACKAGE_WHATSAPP = "com.whatsapp";
     @InjectView(R.id.button_share_photo)
     Button mButtonSharePhoto;
     @InjectView(R.id.image_photo)
@@ -60,6 +68,8 @@ public class SharePhotoActivity extends AppCompatActivity implements View.OnClic
     private Bitmap mImageBitmap;
     private CallbackManager mCallbackManager;
     private SessionManager mSession;
+    private Uri mImageUri;
+    PackageManager mPackageManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +81,7 @@ public class SharePhotoActivity extends AppCompatActivity implements View.OnClic
         mButtonShare.setOnClickListener(this);
         mShareDialog = new ShareDialog(this);
         mSession = new SessionManager(getApplicationContext());
+        mPackageManager = getPackageManager();
     }
 
     @Override
@@ -108,11 +119,53 @@ public class SharePhotoActivity extends AppCompatActivity implements View.OnClic
                 showOptionDialog();
                 break;
             case R.id.button_share:
-                shareToFacebook(mImageBitmap);
+                showAppDialog();
                 break;
             default:
                 break;
         }
+    }
+
+    private void showAppDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_apps);
+        dialog.setTitle(getString(R.string.dialog_share_from));
+        dialog.findViewById(R.id.image_facebook).setOnClickListener(new View
+                .OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareToApp(EXTRA_PACKAGE_FACEBOOK);
+            }
+        });
+        dialog.findViewById(R.id.image_twitter).setOnClickListener(new View
+                .OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareToApp(EXTRA_PACKAGE_TWITTER);
+            }
+        });
+        dialog.findViewById(R.id.image_pinterest).setOnClickListener(new View
+                .OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareToApp(EXTRA_PACKAGE_PINTEREST);
+            }
+        });
+        dialog.findViewById(R.id.image_instagram).setOnClickListener(new View
+                .OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareToApp(EXTRA_PACKAGE_INSTAGRAM);
+            }
+        });
+        dialog.findViewById(R.id.image_whatsapp).setOnClickListener(new View
+                .OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareToApp(EXTRA_PACKAGE_WHATSAPP);
+            }
+        });
+        dialog.show();
     }
 
     private void shareToFacebook(Bitmap imageBitmap) {
@@ -124,6 +177,34 @@ public class SharePhotoActivity extends AppCompatActivity implements View.OnClic
                 .addPhoto(photo)
                 .build();
         mShareDialog.show(content);
+    }
+
+    private void shareToApp(String packageName) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            String text = mEtCaption.getText().toString();
+            mPackageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA);
+            intent.setPackage(packageName);
+            intent.setType("image/jpeg");
+            intent.putExtra(Intent.EXTRA_STREAM, mImageUri);
+            if ((packageName.equals(EXTRA_PACKAGE_FACEBOOK)
+                    || packageName.equals(EXTRA_PACKAGE_INSTAGRAM)
+                    || packageName.equals(EXTRA_PACKAGE_PINTEREST)) && !TextUtils.isEmpty
+                    (mEtCaption.getText().toString())) {
+                showToast(getString(R.string.cannot_share_text));
+            } else {
+                intent.putExtra(Intent.EXTRA_TEXT, text);
+            }
+            startActivity(intent);
+
+        } catch (PackageManager.NameNotFoundException e) {
+            showToast(getString(R.string.app_not_installed));
+        }
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void showOptionDialog() {
@@ -165,6 +246,7 @@ public class SharePhotoActivity extends AppCompatActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
+            mImageUri = data.getData();
             switch (requestCode) {
                 case CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE:
                     if (resultCode == RESULT_OK) {

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linear_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/image_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_common"
+            android:layout_weight="1"
+            android:src="@mipmap/ico_facebook"/>
+
+        <ImageView
+            android:id="@+id/image_twitter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_common"
+            android:layout_weight="1"
+            android:src="@mipmap/ico_twitter"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/image_pinterest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_top"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/ico_pinterest"/>
+
+    <LinearLayout
+        android:id="@+id/linear_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_pinterest"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/dialog_margin_bottom">
+
+        <ImageView
+            android:id="@+id/image_instagram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@mipmap/ico_instagram"/>
+
+        <ImageView
+            android:id="@+id/image_whatsapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@mipmap/ico_whatsapp"/>
+    </LinearLayout>
+
+</RelativeLayout>

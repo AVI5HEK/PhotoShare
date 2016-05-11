@@ -9,4 +9,6 @@
     <string name="share_another">Share another</string>
     <string name="dialog_share_from">Share from...</string>
     <string name="action_logout">Logout</string>
+    <string name="cannot_share_text">Text cannot be shared for this app!</string>
+    <string name="app_not_installed">App not Installed!</string>
 </resources>

@@ -27,7 +27,7 @@
         <ImageView
             android:id="@+id/image_photo"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="@dimen/image_activity_share_height"
             android:layout_below="@id/button_share_photo"
             android:layout_centerHorizontal="true"
             android:paddingTop="@dimen/padding_common"/>

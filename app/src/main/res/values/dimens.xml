@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="padding_common">10dp</dimen>
+    <dimen name="dialog_margin_bottom">20dp</dimen>
+    <dimen name="image_activity_share_height">300dp</dimen>
 </resources>
